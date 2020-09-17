@@ -10,19 +10,15 @@ const app = express();
 // configuramos cors
 app.use(cors());
 
+// lectura y parseo del body
+app.use(express.json());
+
 // base de datos
 dbConnection();
 
-// mostramos las variables de entorno de node
-console.log(process.env);
-
-app.get('/', (req, res) => {
-  res.status(200).json({
-    isSuccess: true,
-    isWarning: false,
-    message: 'Correcto',
-  });
-});
+// rutas
+app.use('/api/usuarios', require('./ruotes/usuarios-routes'));
+app.use('/api/login', require('./ruotes/auth-routes'));
 
 app.listen(process.env.PORT, () => {
   console.log('Servidor corriendo en puerto ' + process.env.PORT);
