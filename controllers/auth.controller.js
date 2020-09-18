@@ -1,5 +1,6 @@
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcryptjs');
+const { generarJWT } = require('../helpers/jwt');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -24,11 +25,12 @@ const login = async (req, res) => {
     }
 
     // generar el token
-
+    const token = await generarJWT(usuarioDb._id, email);
     res.status(200).json({
       isSuccess: true,
       isWarning: false,
       message: 'Acceso correcto',
+      data: token,
     });
   } catch (error) {
     return res.status(500).json({

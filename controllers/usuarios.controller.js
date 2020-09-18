@@ -1,6 +1,7 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario');
+const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async (req, res) => {
   // ponemos las llaves para especificar un filtro
@@ -10,6 +11,7 @@ const getUsuarios = async (req, res) => {
     isSuccess: true,
     isWarning: false,
     message: 'Correcto',
+    uid: req.uid,
     data: usuarios,
   });
 };
@@ -33,11 +35,13 @@ const createUsuario = async (req, res = response) => {
 
     await usuario.save();
 
+    const token = await generarJWT(usuario._id, usuario.email);
     res.status(201).json({
       isSuccess: true,
       isWarning: false,
       message: 'Usario creado con éxito',
       data: usuario,
+      token: token,
     });
   } catch (error) {
     console.log(error);

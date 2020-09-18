@@ -8,11 +8,12 @@ const {
   updateUsuario,
   deleteUsuario,
 } = require('../controllers/usuarios.controller');
+const { validarJwt } = require('../middlewares/validar-jwt');
 
 const router = Router();
 
-router.get('/', getUsuarios);
-router.delete('/:id', deleteUsuario);
+router.get('/', [validarJwt], getUsuarios);
+router.delete('/:id', [validarJwt], deleteUsuario);
 router.post(
   '/',
   [
@@ -26,6 +27,7 @@ router.post(
 router.put(
   '/:id',
   [
+    validarJwt,
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('email', 'Formato de correo no es valido').isEmail(),
     check('role', 'El rol es obligatorio').not().isEmpty(),
