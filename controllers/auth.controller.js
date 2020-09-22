@@ -85,4 +85,21 @@ const googleSingIn = async (req, res) => {
   }
 };
 
-module.exports = { login, googleSingIn };
+const renewToken = async (req, res) => {
+  try {
+    const { uid, email } = req;
+    const token = await generarJWT(uid, email);
+    res.status(200).json({
+      isSuccess: true,
+      message: 'Token renovado',
+      data: { uid, token },
+    });
+  } catch (error) {
+    res.status(401).json({
+      isSuccess: false,
+      message: 'Error al renovar token',
+    });
+  }
+};
+
+module.exports = { login, googleSingIn, renewToken };

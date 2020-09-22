@@ -10,8 +10,9 @@ const validarJwt = (req, res, next) => {
   }
 
   try {
-    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    const { uid, email } = jwt.verify(token, process.env.JWT_SECRET);
     req.uid = uid;
+    req.email = email;
     next();
   } catch (error) {
     return res.status(401).json({
