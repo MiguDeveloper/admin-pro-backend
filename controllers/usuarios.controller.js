@@ -4,14 +4,31 @@ const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async (req, res) => {
+  // como vamos a usar paginacion usamos el queryparam
+  const desde = Number(req.query.desde) || 0;
+
+  /*
   // ponemos las llaves para especificar un filtro
-  const usuarios = await Usuario.find({}, 'nombre email role google');
+  const usuarios = await Usuario.find({}, 'nombre email role google')
+    .skip(desde)
+    .limit(3);
+  const total = await Usuario.count();
+  */
+
+  // Como queremos que no haya demasiado tiempo en ejecutar los servicios
+  // por separado paginacion y total usaremos una promesa que ejecute los
+  // los dos y lo desestructuramos
+  const [usuarios, total] = await Promise.all([
+    Usuario.find({}, 'nombre email role google img').skip(desde).limit(3),
+    Usuario.countDocuments(),
+  ]);
 
   res.status(200).json({
     isSuccess: true,
     isWarning: false,
     message: 'Correcto',
     uid: req.uid,
+    total: total,
     data: usuarios,
   });
 };

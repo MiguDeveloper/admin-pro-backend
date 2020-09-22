@@ -21,6 +21,8 @@ app.use('/api/usuarios', require('./ruotes/usuarios-routes'));
 app.use('/api/hospitales', require('./ruotes/hospitales-routes'));
 app.use('/api/medicos', require('./ruotes/medicos-routes'));
 app.use('/api/login', require('./ruotes/auth-routes'));
+app.use('/api/todo', require('./ruotes/busquedas-router'));
+app.use('/api/upload', require('./ruotes/uploads-router'));
 
 app.listen(process.env.PORT, () => {
   console.log('Servidor corriendo en puerto ' + process.env.PORT);
