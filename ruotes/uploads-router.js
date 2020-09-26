@@ -10,5 +10,5 @@ const router = Router();
 router.use(fileUpload());
 
 router.put('/:tipo/:id', [validarJwt], updateFile);
-router.get('/:tipo/:foto', [validarJwt], retornaImagen);
+router.get('/:tipo/:foto', [], retornaImagen);
 module.exports = router;

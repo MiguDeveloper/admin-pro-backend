@@ -21,7 +21,7 @@ const login = async (req, res) => {
       return res.status(400).json({
         isSuccess: false,
         isWarning: true,
-        message: 'Contraseña no valida',
+        message: 'Credenciales no validas',
       });
     }
 
@@ -78,6 +78,7 @@ const googleSingIn = async (req, res) => {
       data: token,
     });
   } catch (error) {
+    console.log(error);
     res.status(401).json({
       isSuccess: false,
       message: 'token no es correcto',
@@ -89,10 +90,11 @@ const renewToken = async (req, res) => {
   try {
     const { uid, email } = req;
     const token = await generarJWT(uid, email);
+    const usuario = await Usuario.findById(uid, 'nombre img role google email');
     res.status(200).json({
       isSuccess: true,
       message: 'Token renovado',
-      data: { uid, token },
+      data: { uid, token, usuario },
     });
   } catch (error) {
     res.status(401).json({
