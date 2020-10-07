@@ -1,7 +1,9 @@
 # dependencies
 /node_modules
 
-/uploads
+/uploads/hospitales
+/uploads/medicos
+/uploads/usuarios
 
 # System Files
 .DS_Store
