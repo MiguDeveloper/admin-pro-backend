@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const actualizarImagen = async (tipo, id, nombreArchivo) => {
   let pathViejo = '';
+
   switch (tipo) {
     case 'usuarios':
       const usuario = await Usuario.findById(id);

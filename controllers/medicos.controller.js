@@ -2,8 +2,8 @@ const Medico = require('../models/medico');
 
 const getMedicos = async (req, res) => {
   const medicos = await Medico.find()
-    .populate('usuario', 'nombre email')
-    .populate('hospital', 'nombre');
+    .populate('usuario', 'nombre')
+    .populate('hospital', 'nombre img');
   try {
     res.status(200).json({
       isSuccess: true,
@@ -107,4 +107,30 @@ const eliminarMedico = async (req, res) => {
   }
 };
 
-module.exports = { getMedicos, crearMedico, actualizarMedico, eliminarMedico };
+const getMedicoById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const medico = await Medico.findById(id)
+      .populate('usuario', 'nombre img')
+      .populate('hospital', 'nombre img');
+    res.status(200).json({
+      isSuccess: true,
+      isWarning: false,
+      message: 'Medico encontrado ok',
+      data: medico,
+    });
+  } catch (error) {
+    res.status(500).json({
+      isSuccess: false,
+      message: 'Error inesperado en la base de datos',
+    });
+  }
+};
+
+module.exports = {
+  getMedicos,
+  crearMedico,
+  actualizarMedico,
+  eliminarMedico,
+  getMedicoById,
+};

@@ -19,7 +19,7 @@ const getUsuarios = async (req, res) => {
   // por separado paginacion y total usaremos una promesa que ejecute los
   // los dos y lo desestructuramos
   const [usuarios, total] = await Promise.all([
-    Usuario.find({}, 'nombre email role google img').skip(desde).limit(3),
+    Usuario.find({}, 'nombre email role google img').skip(desde).limit(5),
     Usuario.countDocuments(),
   ]);
 
@@ -103,8 +103,15 @@ const updateUsuario = async (req, res) => {
     //delete campos.password;
     //delete campos.google;
 
-    // Ahora agregamos el email ya que es diferente
-    campos.email = email;
+    // Ahora agregamos el email ya que es diferente pero si no autenticado con google
+    if (!usuarioBd.google) {
+      campos.email = email;
+    } else if (usuarioBd.email !== email) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: 'Usuario autenticados por google no pueden cambiar el correo',
+      });
+    }
 
     // ponemos new: true para que nos retorne el usuario actualizado
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {
@@ -131,6 +138,13 @@ const deleteUsuario = async (req, res) => {
   const uid = req.params.id;
   console.log(uid);
   try {
+    if (!uid) {
+      return res.status(400).json({
+        isSuccess: false,
+        isWarning: true,
+        message: 'ID de Usuario no undefined',
+      });
+    }
     const usuarioBd = await Usuario.findById(uid);
     if (!usuarioBd) {
       return res.status(404).json({

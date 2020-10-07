@@ -1,5 +1,3 @@
-const Hospital = require('../models/hospital');
-const Medico = require('../models/medico');
 const Usuario = require('../models/usuario');
 const { v4: uuidv4 } = require('uuid');
 const { actualizarImagen } = require('../helpers/actualizar-imagen');
@@ -17,6 +15,14 @@ const updateFile = async (req, res) => {
       return res.status(400).json({
         isSuccess: false,
         message: 'No es un medico | usuario | hospital',
+      });
+    }
+    try {
+      await Usuario.findById(id);
+    } catch (error) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: 'ID de usuario no valido',
       });
     }
 
@@ -53,10 +59,9 @@ const updateFile = async (req, res) => {
           message: 'Error al mover la imagen',
         });
       }
-
       // actualizamos la imagen
       if (!actualizarImagen(tipo, id, nombreArchivo)) {
-        res.status(400).json({
+        return res.status(400).json({
           isSuccess: false,
           message: 'Usuario no encontrado',
           data: id,

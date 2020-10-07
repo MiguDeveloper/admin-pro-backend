@@ -6,6 +6,7 @@ const {
   crearMedico,
   actualizarMedico,
   eliminarMedico,
+  getMedicoById,
 } = require('../controllers/medicos.controller');
 const { validarCampos } = require('../middlewares/validar-campos.middleware');
 const { validarJwt } = require('../middlewares/validar-jwt');
@@ -26,5 +27,6 @@ router.post(
 );
 router.put('/:id', [validarJwt], actualizarMedico);
 router.delete('/:id', [validarJwt], eliminarMedico);
+router.get('/:id', [validarJwt], getMedicoById);
 
 module.exports = router;
